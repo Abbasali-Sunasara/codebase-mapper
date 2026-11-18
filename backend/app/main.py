@@ -6,7 +6,7 @@ from app.core.config import settings
 app = FastAPI(
     title=settings.project_name,
     version="1.0.0",
-    description="Deterministic AST code analysis paired with AI architectural summaries."
+    description="Deterministic AST code analysis and repository architecture mapping."
 )
 
 # Enable CORS for local React/Vite development
@@ -23,7 +23,7 @@ app.include_router(api_router, prefix="/api")
 
 @app.get("/")
 def read_root():
-    return {"message": "AI Codebase Mapper Backend is running successfully!"}
+    return {"message": "Codebase Mapper Backend is running successfully!"}
 
 
 @app.get("/health")

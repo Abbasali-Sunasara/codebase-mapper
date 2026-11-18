@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: ai-codebase-mapper-api
+    name: codebase-mapper-api
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend

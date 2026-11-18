@@ -1,4 +1,4 @@
-# AI Codebase Mapper frontend
+# Codebase Mapper frontend
 
 The frontend is a React application written in JavaScript and built with Vite.
 

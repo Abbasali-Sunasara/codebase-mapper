@@ -14,7 +14,7 @@ def _backend_env_path() -> Path:
 
 
 class Settings(BaseSettings):
-    project_name: str = "AI Codebase Mapper API"
+    project_name: str = "Codebase Mapper API"
     groq_api_key: str = ""
     groq_model: str = "openai/gpt-oss-120b"
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"

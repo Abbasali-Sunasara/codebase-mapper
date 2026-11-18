@@ -1,17 +1,16 @@
-# AI Codebase Mapper — Project Structure
+# Codebase Mapper — Project Structure
 
 This document describes the current repository layout, how a repository analysis moves through the system, and what the graph nodes and edges represent.
 
 ## Project at a glance
 
-AI Codebase Mapper accepts a public GitHub repository URL, clones the current repository snapshot into a temporary directory, and analyzes Python source files without executing them. Deterministic AST parsing and rule-based checks produce the structural data. A Groq model can add short natural-language summaries. The React frontend polls the backend job and displays repository metrics, a module dependency graph, and file details.
+Codebase Mapper accepts a public GitHub repository URL, clones the current repository snapshot into a temporary directory, and analyzes Python source files without executing them. Deterministic AST parsing and rule-based checks produce the structural data. The React frontend polls the backend job and displays repository metrics, a module dependency graph, and file details.
 
 ```text
 GitHub URL
    │
    ▼
 FastAPI job ──► shallow clone ──► Python AST + rule checks ──► graph and metrics
-                                                           └──► optional Groq summaries
    │
    ▼
 JSON job result ──► React UI ──► Dagre layout + React Flow graph + inspector
@@ -112,10 +111,10 @@ The symbol classifier may label components as `api_route`, `background_worker`, 
 
 `graph_metrics.py` calculates module fan-in/fan-out, dependency cycles (up to 100 reported cycles), and oversized modules (500 or more lines). `container_detector.py` adds repository-relative container and dependency-manifest paths. `security_checks.py` adds finding records with file, line, and finding type.
 
-### Cache and AI summaries
+### Cache and disabled AI summaries
 
 - `cache.py` stores analysis JSON in SQLite keyed by commit SHA and summaries keyed by a SHA-256 hash of file contents.
-- `summarizer.py` selects up to three Python files with classes/functions, sends their extracted metadata and numbered source text to the AI client, validates any cited line numbers, then caches valid summaries.
+- AI summary generation is currently commented out in `api/endpoints.py`; `summarizer.py` and the related cache/client code are retained but are not called by the analysis pipeline.
 - `core/config.py` loads `GROQ_API_KEY` and `GROQ_MODEL` from the backend `.env` or process environment. The default model is `openai/gpt-oss-120b`.
 - `core/ai_client.py` calls Groq through the OpenAI-compatible SDK. Missing credentials, rate limits, timeouts, and other API failures return an “AI summarization unavailable” string so AI failure does not abort the deterministic analysis pipeline.
 
@@ -126,7 +125,7 @@ The symbol classifier may label components as `api_route`, `background_worker`, 
 - `services/api.js` uses Axios. The default API base URL is `http://127.0.0.1:8000` and can be overridden with `VITE_API_BASE_URL`. It submits the URL and polls the job endpoint every 1.2 seconds until completion or failure.
 - `MetricsPanel.jsx` presents file, component, dependency, cycle, fan, oversized-module, and security counts.
 - `FlowCanvas.jsx` displays the module dependency graph with React Flow controls and minimap. `lib/layout.js` uses Dagre to lay out modules and adds folder grouping nodes for visual organization.
-- `InspectorSidebar.jsx` shows selected-file classification, classes, functions, fields, imports, routes, security findings, evidence symbols, and any AI summary.
+- `InspectorSidebar.jsx` shows selected-file classification, classes, functions, fields, imports, routes, security findings, and evidence symbols. The AI summary display is currently commented out.
 - `Header.jsx` and `JobStatus.jsx` display branding and job progress/errors.
 
 ### What appears as graph nodes in the UI
