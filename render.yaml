@@ -1,14 +1,12 @@
 services:
   - type: web
-    name: codebase-mapper-api
+    name: codebase-mapper
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
-    dockerContext: ./backend
+    dockerContext: .
     healthCheckPath: /health
     envVars:
       - key: GROQ_API_KEY
         sync: false
       - key: GROQ_MODEL
         value: openai/gpt-oss-120b
-      - key: CORS_ORIGINS
-        value: https://your-frontend.vercel.app
